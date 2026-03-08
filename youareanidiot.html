@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are An Idiot!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            animation: flashBackground 0.3s infinite;
+        }
+
+        @keyframes flashBackground {
+            0%, 49% { background-color: #000; }
+            50%, 100% { background-color: #fff; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 15vw;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            animation: flashText 0.3s infinite;
+            text-shadow: 
+                5px 5px 0px rgba(0,0,0,0.3),
+                10px 10px 0px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        @keyframes flashText {
+            0%, 49% { color: #fff; }
+            50%, 100% { color: #000; }
+        }
+
+        .subtitle {
+            font-size: 4vw;
+            margin-top: 20px;
+            animation: flashText 0.3s infinite;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+
+        .emoji {
+            font-size: 10vw;
+            margin: 30px 0;
+            display: block;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Original popup styles */
+        .popup {
+            position: fixed;
+            width: 300px;
+            height: 200px;
+            border: 3px solid #000;
+            animation: flashBackground 0.3s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            z-index: 9999;
+        }
+
+        .popup-text {
+            animation: flashText 0.3s infinite;
+            text-transform: uppercase;
+        }
+
+        /* ===================== */
+        /* WINDOWS XP ERROR BOX  */
+        /* ===================== */
+        .xp-window {
+            position: fixed;
+            width: 380px;
+            font-family: 'Tahoma', 'MS Sans Serif', sans-serif;
+            font-size: 11px;
+            border: 2px solid #0a246a;
+            border-radius: 5px 5px 0 0;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.6), inset 1px 1px 0 #fff;
+            z-index: 99999;
+            user-select: none;
+            cursor: default;
+        }
+
+        .xp-titlebar {
+            height: 28px;
+            background: linear-gradient(180deg,
+                #0a246a 0%,
+                #a6b8e8 4%,
+                #3169c6 6%,
+                #4a80d8 40%,
+                #3369c2 70%,
+                #1a4fa0 90%,
+                #0a246a 100%
+            );
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px 0 6px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .xp-titlebar-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .xp-title-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .xp-title-text {
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            white-space: nowrap;
+        }
+
+        .xp-titlebar-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .xp-btn {
+            width: 21px;
+            height: 21px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        }
+
+        .xp-btn-close {
+            background: linear-gradient(180deg, #e85050 0%, #c02020 50%, #901010 100%);
+        }
+        .xp-btn-close:hover {
+            background: linear-gradient(180deg, #ff7070 0%, #e03030 50%, #b02020 100%);
+        }
+
+        .xp-body {
+            background: #ece9d8;
+            padding: 16px;
+            border-top: 1px solid #fff;
+        }
+
+        .xp-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .xp-error-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .xp-message {
+            color: #000;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .xp-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .xp-ok-btn {
+            min-width: 75px;
+            height: 23px;
+            background: linear-gradient(180deg, #fff 0%, #ece9d8 50%, #d8d0c4 100%);
+            border: 1px solid #7f9db9;
+            border-radius: 3px;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.8);
+            padding: 0 12px;
+        }
+        .xp-ok-btn:hover {
+            background: linear-gradient(180deg, #dce8fc 0%, #c4d8f8 50%, #b0c8f0 100%);
+            border-color: #316ac5;
+        }
+        .xp-ok-btn:active {
+            background: linear-gradient(180deg, #b0c8f0 0%, #c4d8f8 100%);
+        }
+
+        /* XP Taskbar at bottom */
+        .xp-taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(180deg, #1f5bc6 0%, #3b7de0 3%, #2060c8 96%, #1a50b0 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            z-index: 88888;
+            box-shadow: 0 -1px 0 #1040a0;
+        }
+
+        .xp-start-btn {
+            height: 24px;
+            background: linear-gradient(180deg, #5ea43b 0%, #3c8a1e 50%, #2e7010 100%);
+            border: 1px solid #1a5010;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            font-style: italic;
+            padding: 0 10px 0 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="emoji">🤪</span>
+        <h1>You Are An Idiot</h1>
+        <div class="subtitle">Ha Ha Ha Ha Ha Ha Ha</div>
+    </div>
+
+    <!-- Fake XP Taskbar for ambiance -->
+    <div class="xp-taskbar">
+        <button class="xp-start-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="0" y="0" width="7" height="7" fill="#f33"/>
+                <rect x="9" y="0" width="7" height="7" fill="#3c3"/>
+                <rect x="0" y="9" width="7" height="7" fill="#33f"/>
+                <rect x="9" y="9" width="7" height="7" fill="#fc0"/>
+            </svg>
+            start
+        </button>
+    </div>
+
+    <script>
+        let popupCount = 0;
+        let xpWindowCount = 0;
+        let audioContext;
+        let isPlaying = false;
+
+        const XP_ERRORS = [
+            { title: "Fatal Error", msg: "A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.\nThe current application will be terminated.\n\nYou are an idiot." },
+            { title: "Error", msg: "You are an idiot.\n\nClick OK to continue being an idiot." },
+            { title: "Windows - No Disk", msg: "Exception Processing Message 0xc0000013\nParameters 0x75b6bf7c 0x4 0x75b6bf7c 0x75b6bf7c\n\n[YOU ARE AN IDIOT]" },
+            { title: "Microsoft Windows", msg: "Windows has detected that your brain is missing.\n\nWould you like to download one? (unavailable)" },
+            { title: "System32 Error", msg: "STOP: 0x0000007E SYSTEM_THREAD_EXCEPTION_NOT_HANDLED\n\nCause: You are an idiot." },
+            { title: "Application Error", msg: "The instruction at '0x00000000' referenced memory at '0x00000000'. The memory could not be 'read'.\n\nYou are an idiot. Click OK." },
+            { title: "Windows Firewall Alert", msg: "Windows Firewall has blocked you from using the internet because you are an idiot." },
+            { title: "Low Virtual Memory", msg: "Your system is running low on virtual memory.\n\nThis is because you are an idiot.\n\nWindows will now increase the size of your virtual idiocy file." },
+            { title: "Disk Cleanup", msg: "Windows has detected 99% of your disk is filled with idiocy.\n\nWould you like to delete yourself?" },
+            { title: "Update Error", msg: "Windows Update could not install the Intelligence Update (KB4YOU001).\n\nError code: 0x80004IDIOT" },
+            { title: "Virus Detected!", msg: "YOUR BRAIN HAS BEEN INFECTED WITH:\n\nW32.Idiot.Trojan\n\nThis virus causes the following symptoms:\n- Being an idiot\n- Clicking on things\n- Existing" },
+            { title: "Windows - System Error", msg: "Not enough quota is available to process this command.\n\n(You have run out of brain cells)" },
+            { title: "Internet Explorer Script Error", msg: "An error has occurred in the script on this page.\n\nLine: 1\nChar: 1\nError: You are an idiot\nCode: 0\nURL: http://www.youareanidiot.com" },
+            { title: "Dr. Watson Postmortem Debugger", msg: "Dr. Watson has detected a fatal error in: YOUR BRAIN.EXE\n\nThe application will now self-destruct." },
+            { title: "Recycle Bin", msg: "Are you sure you want to permanently delete 'YOUR DIGNITY'?\n\n(It has already been deleted)" },
+        ];
+
+        // ─── AUDIO ───────────────────────────────────────────────────────────
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                playAnnoyingSound();
+            }
+        }
+
+        function playAnnoyingSound() {
+            if (isPlaying) return;
+            isPlaying = true;
+            const notes = [800, 600, 800, 600];
+            let noteIndex = 0;
+
+            function playNote() {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.frequency.value = notes[noteIndex % notes.length];
+                oscillator.type = 'square';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+                noteIndex++;
+                setTimeout(playNote, 300);
+            }
+            playNote();
+        }
+
+        // Play E4 (329.63 Hz) and F4 (349.23 Hz) simultaneously — the XP error chord
+        function playXPChord() {
+            if (!audioContext) return;
+
+            [329.63, 349.23].forEach(freq => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.type = 'square';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.25, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.7);
+                osc.start(audioContext.currentTime);
+                osc.stop(audioContext.currentTime + 0.7);
+            });
+        }
+
+        // ─── NEW TAB SPAWNER ─────────────────────────────────────────────────
+        function trySpawnNewTab() {
+            try {
+                const w = window.open(window.location.href, '_blank');
+                if (!w) {
+                    // Blocked by popup blocker — oh well, more XP errors instead
+                    createXPWindow();
+                    createXPWindow();
+                }
+            } catch(e) {
+                createXPWindow();
+            }
+        }
+
+        // ─── ORIGINAL BOUNCING POPUP ─────────────────────────────────────────
+        function createPopup() {
+            popupCount++;
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerHTML = '<div class="popup-text">You Are An Idiot!</div>';
+
+            let x = Math.random() * (window.innerWidth - 300);
+            let y = Math.random() * (window.innerHeight - 200);
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            document.body.appendChild(popup);
+
+            let vx = (Math.random() - 0.5) * (8 + popupCount * 0.1);
+            let vy = (Math.random() - 0.5) * (8 + popupCount * 0.1);
+
+            function movePopup() {
+                x += vx;
+                y += vy;
+                if (x <= 0 || x >= window.innerWidth - 300) {
+                    vx = -vx;
+                    x = Math.max(0, Math.min(x, window.innerWidth - 300));
+                }
+                if (y <= 0 || y >= window.innerHeight - 200) {
+                    vy = -vy;
+                    y = Math.max(0, Math.min(y, window.innerHeight - 200));
+                }
+                popup.style.left = x + 'px';
+                popup.style.top = y + 'px';
+                requestAnimationFrame(movePopup);
+            }
+            movePopup();
+
+            popup.addEventListener('click', function(e) {
+                e.preventDefault();
+                initAudio();
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => createPopup(), i * 50);
+                }
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => createXPWindow(), i * 80);
+                }
+            });
+        }
+
+        // ─── WINDOWS XP ERROR WINDOW ─────────────────────────────────────────
+        function createXPWindow() {
+            xpWindowCount++;
+            initAudio();
+            playXPChord();
+
+            const err = XP_ERRORS[Math.floor(Math.random() * XP_ERRORS.length)];
+
+            const win = document.createElement('div');
+            win.className = 'xp-window';
+
+            // Random position (keep on screen)
+            let wx = Math.random() * Math.max(0, window.innerWidth - 400);
+            let wy = Math.random() * Math.max(0, window.innerHeight - 200);
+            win.style.left = wx + 'px';
+            win.style.top = wy + 'px';
+
+            // Error icon SVG (red circle with X)
+            const errorIconSVG = `<svg class="xp-error-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="15" fill="#cc0000" stroke="#800000" stroke-width="1"/>
+                <text x="16" y="22" text-anchor="middle" font-size="22" font-weight="bold" fill="white" font-family="Arial">✕</text>
+            </svg>`;
+
+            // Title bar icon SVG
+            const titleIconSVG = `<svg class="xp-title-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8" cy="8" r="7" fill="#ff4444" stroke="#aa0000" stroke-width="1"/>
+                <text x="8" y="12" text-anchor="middle" font-size="10" font-weight="bold" fill="white" font-family="Arial">!</text>
+            </svg>`;
+
+            const msgFormatted = err.msg.replace(/\n/g, '<br>');
+
+            win.innerHTML = `
+                <div class="xp-titlebar">
+                    <div class="xp-titlebar-left">
+                        ${titleIconSVG}
+                        <span class="xp-title-text">${err.title}</span>
+                    </div>
+                    <div class="xp-titlebar-buttons">
+                        <div class="xp-btn xp-btn-close" title="Close">✕</div>
+                    </div>
+                </div>
+                <div class="xp-body">
+                    <div class="xp-content">
+                        ${errorIconSVG}
+                        <div class="xp-message">${msgFormatted}</div>
+                    </div>
+                    <div class="xp-buttons">
+                        <button class="xp-ok-btn">OK</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(win);
+
+            // Make draggable
+            let isDragging = false;
+            let dragOffX = 0, dragOffY = 0;
+            const titlebar = win.querySelector('.xp-titlebar');
+            titlebar.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                dragOffX = e.clientX - win.getBoundingClientRect().left;
+                dragOffY = e.clientY - win.getBoundingClientRect().top;
+                win.style.zIndex = 999999;
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    win.style.left = (e.clientX - dragOffX) + 'px';
+                    win.style.top  = (e.clientY - dragOffY) + 'px';
+                }
+            });
+            document.addEventListener('mouseup', function() { isDragging = false; });
+
+            // Close button — spawns MORE windows
+            const closeBtn = win.querySelector('.xp-btn-close');
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                initAudio();
+                // Removing one spawns 4 more
+                win.remove();
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => createXPWindow(), i * 60);
+                }
+                // Also try to open a new tab
+                setTimeout(() => trySpawnNewTab(), 100);
+            });
+
+            // OK button — same chaos
+            const okBtn = win.querySelector('.xp-ok-btn');
+            okBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                initAudio();
+                win.remove();
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => createXPWindow(), i * 60);
+                }
+                setTimeout(() => trySpawnNewTab(), 100);
+            });
+
+            // Bounce the XP window around too (slower than main popups)
+            let vx = (Math.random() - 0.5) * (3 + xpWindowCount * 0.05);
+            let vy = (Math.random() - 0.5) * (3 + xpWindowCount * 0.05);
+
+            function moveWin() {
+                if (isDragging) { requestAnimationFrame(moveWin); return; }
+                wx += vx;
+                wy += vy;
+                if (wx <= 0 || wx >= window.innerWidth - 400) {
+                    vx = -vx;
+                    wx = Math.max(0, Math.min(wx, window.innerWidth - 400));
+                }
+                if (wy <= 0 || wy >= window.innerHeight - 200) {
+                    vy = -vy;
+                    wy = Math.max(0, Math.min(wy, window.innerHeight - 200));
+                }
+                win.style.left = wx + 'px';
+                win.style.top  = wy + 'px';
+                requestAnimationFrame(moveWin);
+            }
+            moveWin();
+        }
+
+        // ─── GLOBAL EVENT LISTENERS ───────────────────────────────────────────
+
+        window.addEventListener('beforeunload', function(e) {
+            initAudio();
+            for (let i = 0; i < 6; i++) setTimeout(() => createPopup(), i * 100);
+            for (let i = 0; i < 4; i++) setTimeout(() => createXPWindow(), i * 120);
+            e.preventDefault();
+            e.returnValue = '';
+            return 'Are you sure you want to leave? 😈';
+        });
+
+        document.addEventListener('keydown', function(e) {
+            e.preventDefault();
+            initAudio();
+            const numP = 3 + Math.floor(Math.random() * 5);
+            for (let i = 0; i < numP; i++) setTimeout(() => createPopup(), i * 50);
+            for (let i = 0; i < 2; i++) setTimeout(() => createXPWindow(), i * 80);
+        });
+
+        let mouseSpawnTimer = null;
+        document.addEventListener('mousemove', function(e) {
+            initAudio();
+            if (!mouseSpawnTimer) {
+                createPopup();
+                mouseSpawnTimer = setTimeout(() => { mouseSpawnTimer = null; }, 200);
+            }
+        });
+
+        document.addEventListener('mousedown', function(e) {
+            initAudio();
+            for (let i = 0; i < 4; i++) setTimeout(() => createPopup(), i * 50);
+            setTimeout(() => createXPWindow(), 0);
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            initAudio();
+            for (let i = 0; i < 3; i++) setTimeout(() => createPopup(), i * 50);
+        });
+
+        document.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            initAudio();
+            for (let i = 0; i < 5; i++) setTimeout(() => createPopup(), i * 50);
+            setTimeout(() => createXPWindow(), 0);
+        }, { passive: false });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            initAudio();
+            for (let i = 0; i < 6; i++) setTimeout(() => createPopup(), i * 50);
+            for (let i = 0; i < 2; i++) setTimeout(() => createXPWindow(), i * 100);
+        });
+
+        // ─── INITIAL SPAWN ────────────────────────────────────────────────────
+        setTimeout(() => createPopup(), 1000);
+        setTimeout(() => createXPWindow(), 2000);
+        setTimeout(() => createXPWindow(), 3500);
+
+        // Periodic random spawns
+        setInterval(() => {
+            if (Math.random() > 0.5) createPopup();
+        }, 3000);
+
+        setInterval(() => {
+            createXPWindow();
+        }, 5000);
+
+        // Periodic new tab attempts
+        setInterval(() => {
+            trySpawnNewTab();
+        }, 8000);
+    </script>
+</body>
+</html>
